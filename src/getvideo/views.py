@@ -1,6 +1,6 @@
 from django.http import JsonResponse
 from django.core.paginator import Paginator, EmptyPage
-from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 
 from getvideo.models import Video
 # Create your views here.
