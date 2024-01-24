@@ -24,8 +24,8 @@ def save_video(videos):
                     videoId=video['id']['videoId'],
                     title = video['snippet']['title'],
                     description = video['snippet']['description'],
-                    published_at = video['snippet']['publishedAt'],
-                    thumbnail_urls = {
+                    publishedAt = video['snippet']['publishedAt'],
+                    thumbnailUrls = {
                         'default': video['snippet']['thumbnails']['default']['url'],
                         'medium': video['snippet']['thumbnails']['medium']['url'],
                         'high': video['snippet']['thumbnails']['high']['url'],
@@ -55,6 +55,7 @@ class Command(BaseCommand):
 
         apikeys = Apikeys.objects.all()      
         active_api_key = apikeys.first().apikey if apikeys.exists() else "something"
+        query = "offical"
 
         next_page = None
         new_video_add_db = 0
@@ -63,7 +64,7 @@ class Command(BaseCommand):
         
         while True:
             try:
-                videos = search_video("keys",50, next_page,active_api_key)
+                videos = search_video(query,50, next_page,active_api_key)
                 number_of_vid = len(videos['items'])
                 if number_of_vid >0:
                     new_video_add_db = save_video(videos)
@@ -89,7 +90,7 @@ class Command(BaseCommand):
                 if e.resp['status'] == '403':
                     self.stdout.write('Either access is forbidden or quota exceeded. Moving on to the next api key.')
                     api_key_idx = api_key_idx + 1
-                    if api_key_idx == apikeys.count():
+                    if api_key_idx >= apikeys.count():
                         self.stdout.write('No next key present. Add more keys.')
                         break
                     active_api_key = apikeys[api_key_idx].apikey
@@ -100,6 +101,6 @@ class Command(BaseCommand):
                 
             finally:
                 sys.stdout.flush()
-                sleep(int(API_TIME_INTERVAL))
+                sleep(int(API_TIME_INTERVAL)/1000)
 
 

@@ -5,10 +5,10 @@ from getvideo.models import Video
 
 class VideoAdmin(ModelAdmin):
     
-    list_display = ('videoId','title','published_at')
+    list_display = ('videoId','title','publishedAt')
     search_fields = ('videoId','title','description')
-    ordering = ['published_at']
-    list_filter = ['published_at']
+    ordering = ['publishedAt']
+    list_filter = ['publishedAt']
     
 admin.site.register(Video, VideoAdmin)
 

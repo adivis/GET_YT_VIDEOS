@@ -17,7 +17,7 @@ def get_videos(request):
         return JsonResponse({"error":"Method Not Allowed"}, status=405)
     
     # get sorted in descending order ('-' is used as NOT)
-    videos = Video.objects.all().order_by('-published_at').values()
+    videos = Video.objects.all().order_by('-publishedAt').values()
     
     # paginator to get number of result on a particular page
     p = Paginator(videos,1)
