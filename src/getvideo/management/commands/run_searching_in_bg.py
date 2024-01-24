@@ -40,7 +40,7 @@ def search_video(query, max_res, next_page, API_SECRET_KEY):
     service = build(API_NAME, API_VERSION, developerKey=API_SECRET_KEY)
 
     try:
-        api_response = service.search().list(part="snippet",q=query, maxResults=max_res, pageToken=next_page).execute()
+        api_response = service.search().list(part="snippet",q=query, maxResults=max_res, pageToken=next_page, order="date").execute()
         return api_response
     
     # If quota is exceeded
@@ -77,8 +77,8 @@ class Command(BaseCommand):
                     next_page = videos['nextPageToken']
                 else:
                     break
-                message = 'At ' + str(datetime.datetime.now()) +'\nadded '+str(new_video_add_db)+' new videos in db. Total videos added '+str(tot_video_add)
-                self.stdout.write(message)
+                display_message = 'At ' + str(datetime.datetime.now()) +'\nadded '+str(new_video_add_db)+' new videos in db. Total videos added '+str(tot_video_add)
+                self.stdout.write(display_message)
                 
             except HttpError as e:    
                 # error if no apikey exists in db
@@ -87,6 +87,10 @@ class Command(BaseCommand):
                     break
                 
                 #  Core API errors
+                if e.resp['status'] == '400':
+                    self.stdout.write(e.reason)
+                    break
+                    
                 if e.resp['status'] == '403':
                     self.stdout.write('Either access is forbidden or quota exceeded. Moving on to the next api key.')
                     api_key_idx = api_key_idx + 1
