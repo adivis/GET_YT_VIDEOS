@@ -20,7 +20,7 @@ def get_videos(request):
     videos = Video.objects.all().order_by('-publishedAt').values()
     
     # paginator to get number of result on a particular page
-    p = Paginator(videos,1)
+    p = Paginator(videos,10)
 
     # get the page_no from params. If not provided set default to 1
     pageNumber = int(request.GET.get('pageNumber',1))
