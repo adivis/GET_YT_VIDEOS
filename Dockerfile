@@ -8,5 +8,5 @@ WORKDIR /code/
 
 RUN pip install -r requirements.txt
 
-COPY src /app/
+COPY src /code/
 

@@ -65,49 +65,49 @@ class Command(BaseCommand):
         new_video_add_db = 0
         tot_video_add = 0
         api_key_idx = 0
-
         while True:
-            try:
-                videos = search_video(query, 50, next_page, active_api_key)
-                number_of_vid = len(videos['items'])
-                if number_of_vid > 0:
-                    new_video_add_db = save_video(videos)
-                    tot_video_add += new_video_add_db
+            while True:
+                try:
+                    videos = search_video(query, 50, next_page, active_api_key)
+                    number_of_vid = len(videos['items'])
+                    if number_of_vid > 0:
+                        new_video_add_db = save_video(videos)
+                        tot_video_add += new_video_add_db
 
-                # check if there is a next page in the response
-                # if yes then set it as page token
-                # else come out of the loop
-                if number_of_vid > 0 and 'nextPageToken' in videos:
-                    next_page = videos['nextPageToken']
-                else:
-                    break
-                display_message = 'At ' + str(datetime.datetime.now()) + '\nadded ' + str(new_video_add_db) + \
-                    ' new videos in db. Total videos added ' + str(tot_video_add)
-                self.stdout.write(display_message)
-
-            except HttpError as e:
-                # error if no apikey exists in db
-                if not apikeys.exists():
-                    self.stdout.write("No apiket exists in DB. Add some.")
-                    break
-
-                # Core API errors
-                if e.resp['status'] == '400':
-                    self.stdout.write(e.reason)
-                    break
-
-                if e.resp['status'] == '403':
-                    self.stdout.write('Either access is forbidden or quota exceeded. Moving on to the next api key.')
-                    api_key_idx = api_key_idx + 1
-                    if api_key_idx >= apikeys.count():
-                        self.stdout.write('No next key present. Add more keys.')
+                    # check if there is a next page in the response
+                    # if yes then set it as page token
+                    # else come out of the loop
+                    if number_of_vid > 0 and 'nextPageToken' in videos:
+                        next_page = videos['nextPageToken']
+                    else:
                         break
-                    active_api_key = apikeys[api_key_idx].apikey
+                    display_message = 'At ' + str(datetime.datetime.now()) + '\nadded ' + str(new_video_add_db) + \
+                        ' new videos in db. Total videos added ' + str(tot_video_add)
+                    self.stdout.write(display_message)
 
-                # any other error
-                else:
-                    self.stderr.write(e)
+                except HttpError as e:
+                    # error if no apikey exists in db
+                    if not apikeys.exists():
+                        self.stdout.write("No apikey exists in DB. Add some.")
+                        break
 
-            finally:
-                sys.stdout.flush()
-                sleep(int(API_TIME_INTERVAL)/1000)
+                    # Core API errors
+                    if e.resp['status'] == '400':
+                        self.stdout.write(e.reason)
+                        break
+
+                    if e.resp['status'] == '403':
+                        self.stdout.write('Either access is forbidden or quota exceeded. Moving on to the next api key.')
+                        api_key_idx = api_key_idx + 1
+                        if api_key_idx >= apikeys.count():
+                            self.stdout.write('No next key present. Add more keys.')
+                            break
+                        active_api_key = apikeys[api_key_idx].apikey
+
+                    # any other error
+                    else:
+                        self.stderr.write(e)
+
+                finally:
+                    sys.stdout.flush()
+                    sleep(int(API_TIME_INTERVAL))
