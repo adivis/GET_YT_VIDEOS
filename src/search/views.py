@@ -8,6 +8,9 @@ from getvideo.models import Video
 def search_video(request):
     """
     A basic search API to search the stored videos using their title and description.
+    Params - 
+    title="tea how"
+    description="something over"
     """
     
     if request.method != 'GET':
@@ -17,10 +20,24 @@ def search_video(request):
     title = str(request.GET.get('title',''))
     description = str(request.GET.get('description',''))
     
+    # get separate words in title and description
+    title = title.split(' ')
+    description = description.split(' ')
+    
+    allVideos = Video.objects.all()
+    # allVideos = Video.objects.filter(title__icontains=title[0]).filter(description__icontains=description)
+    
+    # check all the words of title separately
+    for word in title:
+        allVideos = allVideos.filter(title__icontains=word)
+        
+    # check all the words of description separately
+    for word in description:
+        allVideos = allVideos.filter(description__icontains=word)
+        
     #filter out videos containing give title and description    
-    allVideos = Video.objects.filter(title__icontains=title).filter(description__icontains=description).values()
-
+    
     #return filtered videos
     return JsonResponse({
-        'video':list(allVideos)
+        'video':list(allVideos.values())
     })
