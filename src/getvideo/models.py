@@ -16,4 +16,5 @@ class Video(models.Model):
             models.Index(fields=['published_at']), # for sorting index on published_at
             models.Index(fields=['title']),# for searching
             models.Index(fields=['description']),#for searching
+            models.Index(fields=['videoId']),#for searching and filtering
         ]
