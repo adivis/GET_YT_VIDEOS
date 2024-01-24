@@ -1,10 +1,11 @@
 from django.http import JsonResponse
 from django.core.paginator import Paginator, EmptyPage
+from django.http import JsonResponse
 
 from getvideo.models import Video
 # Create your views here.
-import json
 
+@csrf_exempt
 def get_videos(request):
     """
     returns the stored video data in a response sorted in descending order of published datetime
