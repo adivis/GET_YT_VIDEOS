@@ -55,7 +55,7 @@ class Command(BaseCommand):
 
         apikeys = Apikeys.objects.all()      
         active_api_key = apikeys.first().apikey if apikeys.exists() else "something"
-        query = "offical"
+        query = "official"
 
         next_page = None
         new_video_add_db = 0
