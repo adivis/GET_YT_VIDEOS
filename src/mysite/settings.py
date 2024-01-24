@@ -26,6 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = str(os.getenv('DJANGO_SECRET_KEY'))
 API_SECRET_KEY = str(os.getenv('API_SECRET_KEY'))
+API_TIME_INTERVAL = str(os.getenv('TIME_INTERVAL_BWT_CALLS'))
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
