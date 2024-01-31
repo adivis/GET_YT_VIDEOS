@@ -13,7 +13,7 @@
 1. Download the code from repo or clone `git clone https://github.com/adivis/GET_YT_VIDEOS.git`
 2. run `pip install virtualenv`(make sure python is installed).
 3. go to the directory in the command prompt.
-4. run `virtual venv`
+4. run `virtualenv venv`
 5. run `venv\Scripts\activate`
 6. run `cd src` to go to src folder.
 7. run `pip install -r requirements.txt` to install the dependencies.
